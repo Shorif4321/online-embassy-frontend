@@ -16,23 +16,39 @@ const SignUp = () => {
 
   // to do
   const handleSignUp = (data) => {
-    console.log(data);
     createUser(data.email, data.password)
       .then((result) => {
         const user = result.user;
         console.log(user);
-        alert("Create User Successfully Done");
         const userInf = {
           displayName: data.name,
         };
         updateUser(userInf)
           .then(() => {
-            navigate("/");
+            saveUser(data.name, data.email);
           })
           .catch((err) => console.log(err));
       })
       .catch((error) => {
         console.log(error);
+      });
+  };
+
+  const saveUser = (name, email) => {
+    const user = { name, email };
+    fetch("http://localhost:3000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          alert("User Created Successfully Done");
+          navigate("/");
+        }
       });
   };
 
