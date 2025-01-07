@@ -5,6 +5,10 @@ import About from "../../pages/About/About";
 import Visa from "../../pages/Visa/Visa";
 import Login from "../../pages/Login/Login";
 import SignUp from "./../../pages/SignUp/SignUp";
+import DashboardLayout from "../../Layout/DashboardLayout/DashboardLayout";
+import MyAppointment from "../../pages/Dashboard/MyAppointments/MyAppointment";
+import AllUsers from "./../../pages/Dashboard/AllUsers/AllUsers";
+import PrivateRoute from "./../PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +34,24 @@ const router = createBrowserRouter([
       {
         path: "/sing-up",
         element: <SignUp></SignUp>,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "/dashboard",
+        element: <MyAppointment></MyAppointment>,
+      },
+      {
+        path: "/dashboard/all-users",
+        element: <AllUsers></AllUsers>,
       },
     ],
   },
