@@ -18,7 +18,7 @@ const Header = () => {
       </li>
       <li>
         {" "}
-        <NavLink to="/visa">Visa</NavLink>{" "}
+        <NavLink to="/visa">Visa </NavLink>{" "}
       </li>
 
       {user?.uid ? (
@@ -79,8 +79,8 @@ const Header = () => {
           <a className="btn">Button</a>
         </div> */}
         <label
-          for="dashboard-drawer"
-          class="btn btn-primary drawer-button lg:hidden"
+          htmlFor="dashboard-drawer"
+          className="btn btn-primary drawer-button lg:hidden"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
