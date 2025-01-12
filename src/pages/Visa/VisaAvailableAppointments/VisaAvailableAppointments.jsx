@@ -1,24 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
 import AppointmentOption from "./AppointmentOption";
 import Loading from "../../Shared/Loading/Loading";
+import BookingModal from "../BookingModal/BookingModal";
+import { useState } from "react";
 
-const VisaAvailableAppointments = ({ selected }) => {
-  // const [appointmentOptions, setAppointmentOptions] = useState([]);
-  // useEffect(() => {
-  //   fetch("visaappointments.json")
-  //     .then((res) => res.json())
-  //     .then((data) => setAppointmentOptions(data));
-  // }, []);
+const VisaAvailableAppointments = ({ selectedDate }) => {
+  //
+  const [appointments, setAppointments] = useState(null);
 
-  // date fech korar proe kew appointment ba kon service instant update er jonne upores system use na kore tanstask query data fetch ststem use korbo
-
-  // tanstak query
+  //
   const { data: appointmentOptions, isLoading } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["appointmentOptions"],
     queryFn: async () => {
-      const res = await fetch("visaappointments.json");
+      const res = await fetch("http://localhost:3000/appointmentOptions");
       const data = await res.json();
       return data;
     },
@@ -32,8 +27,9 @@ const VisaAvailableAppointments = ({ selected }) => {
     <div className="my-10 px-5 mx-auto">
       <div className="text-center font-semibold mb-3 md:mb-10">
         <h2 className="text-primary ">Visa Appointments</h2>
+
         <h3 className="text-2xl md:text-3xl">
-          Visa Appointment on: {format(selected, "PP")}
+          Visa Appointment on: {format(selectedDate, "PP")}
         </h3>
       </div>
 
@@ -42,9 +38,16 @@ const VisaAvailableAppointments = ({ selected }) => {
           <AppointmentOption
             key={option._id}
             appointmentOption={option}
+            setAppointments={setAppointments}
           ></AppointmentOption>
         ))}
       </div>
+      {appointments && (
+        <BookingModal
+          appointments={appointments}
+          selectedDate={selectedDate}
+        ></BookingModal>
+      )}
     </div>
   );
 };

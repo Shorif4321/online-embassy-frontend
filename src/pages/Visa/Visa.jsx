@@ -9,7 +9,7 @@ const Visa = () => {
     <div>
       <VisaBanner selected={selected} setSelected={setSelected}></VisaBanner>
       <VisaAvailableAppointments
-        selected={selected}
+        selectedDate={selected}
       ></VisaAvailableAppointments>
     </div>
   );
