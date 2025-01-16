@@ -1,9 +1,53 @@
 import { format } from "date-fns";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "./../../../contexts/AuthProvider";
+import toast from "react-hot-toast";
 
-const BookingModal = ({ appointments, selectedDate }) => {
+const BookingModal = ({
+  setAppointments,
+  appointments,
+  selectedDate,
+  refetch,
+}) => {
+  const { user } = useContext(AuthContext);
   const { name, slots } = appointments;
   const date = format(selectedDate, "PP");
+
+  const handleBooking = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const slot = form.slot.value;
+    const candidateName = form.name.value;
+    const email = form.email.value;
+    const phone = form.phone.value;
+    const booking = {
+      appointmentDate: date,
+      candidate: candidateName,
+      serviceName: name,
+      slot: slot,
+      email: email,
+      phone: phone,
+    };
+    console.log(booking);
+
+    fetch("http://localhost:3000/bookings", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          toast.success("Booking Confirmed!");
+          refetch();
+          setAppointments(null);
+        } else {
+          toast.error(data.message);
+        }
+      });
+  };
 
   return (
     <div>
@@ -20,7 +64,7 @@ const BookingModal = ({ appointments, selectedDate }) => {
             </label>
           </div>
 
-          <form action="">
+          <form onSubmit={handleBooking}>
             <input
               type="text"
               disabled
@@ -29,27 +73,33 @@ const BookingModal = ({ appointments, selectedDate }) => {
               className="input input-bordered w-full mt-4"
             />
 
-            <select className="select select-bordered w-full  mt-4">
-              <option disabled selected>
-                8.0-9.0
-              </option>
-              <option>9.0-9.30</option>
-              <option>9.30-10.0</option>
+            <select name="slot" className="select select-bordered w-full  mt-4">
+              {slots.map((slot, i) => (
+                <option key={i} value={slot}>
+                  {slot}
+                </option>
+              ))}
             </select>
 
             <input
               type="text"
+              name="name"
+              defaultValue={user?.displayName}
               placeholder="Name Here"
               className="input input-bordered w-full mt-4"
             />
 
             <input
+              name="email"
               type="email"
               placeholder="email Here"
+              defaultValue={user?.email}
+              disabled
               className="input input-bordered w-full mt-4"
             />
 
             <input
+              name="phone"
               type="number"
               placeholder="Phone Here"
               className="input input-bordered w-full mt-4"
